@@ -1,0 +1,19 @@
+[
+  {
+    "source": "shopify_blog",
+    "url": "https://www.shopify.com/blog/rss",
+    "type": "rss"
+  },
+  {
+    "source": "klaviyo_blog",
+    "url": "https://www.klaviyo.com/blog/rss",
+    "type": "rss"
+  },
+  {
+    "source": "google_alerts_tiktok_shop",
+    "url": "https://www.google.com/alerts/feeds/00000000000000000000/00000000000000000000",
+    "type": "rss",
+    "keyword": "tiktok shop ecommerce"
+  }
+]
+

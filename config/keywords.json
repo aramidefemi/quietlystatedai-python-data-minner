@@ -1,0 +1,19 @@
+{
+  "regions": ["GB"],
+  "timeframe": "now 7-d",
+  "groups": [
+    {
+      "name": "beauty_products",
+      "terms": ["press on nails", "acrylic nails", "lip gloss", "lip oil"]
+    },
+    {
+      "name": "fashion",
+      "terms": ["cargo pants", "linen trousers", "sneakers", "loafers"]
+    },
+    {
+      "name": "ecom_meta",
+      "terms": ["same day delivery", "click and collect", "free shipping"]
+    }
+  ]
+}
+

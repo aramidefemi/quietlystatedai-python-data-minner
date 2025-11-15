@@ -1,0 +1,9 @@
+{
+  "tiktok_shop": ["tiktok shop", "tt shop"],
+  "email_sms": ["email", "newsletter", "klaviyo", "sms", "flows", "campaigns"],
+  "retention": ["ltv", "lifetime value", "retention", "repeat purchase"],
+  "profitability": ["profit", "margin", "unit economics", "net income"],
+  "paid_social": ["meta ads", "facebook ads", "instagram ads", "paid social"],
+  "search": ["google ads", "performance max", "pmax", "shopping ads"]
+}
+
