@@ -1,9 +1,20 @@
 {
-  "tiktok_shop": ["tiktok shop", "tt shop"],
-  "email_sms": ["email", "newsletter", "klaviyo", "sms", "flows", "campaigns"],
-  "retention": ["ltv", "lifetime value", "retention", "repeat purchase"],
-  "profitability": ["profit", "margin", "unit economics", "net income"],
-  "paid_social": ["meta ads", "facebook ads", "instagram ads", "paid social"],
-  "search": ["google ads", "performance max", "pmax", "shopping ads"]
+  "tiktok_shop": ["tiktok shop", "tt shop", "tiktok commerce", "tiktok shopping"],
+  "email_sms": ["email", "newsletter", "klaviyo", "sms", "text message", "email marketing", "email automation", "abandoned cart"],
+  "retention": ["ltv", "lifetime value", "retention", "repeat purchase", "loyalty", "subscription", "membership"],
+  "profitability": ["profit", "margin", "unit economics", "net income", "revenue", "cac", "customer acquisition cost"],
+  "paid_social": ["meta ads", "facebook ads", "instagram ads", "paid social", "social media ads", "tiktok ads"],
+  "search": ["google ads", "performance max", "pmax", "shopping ads", "search ads", "ppc"],
+  "delivery_shipping": ["same day delivery", "free shipping", "express delivery", "click and collect", "fulfillment", "logistics"],
+  "payment": ["buy now pay later", "klarna", "afterpay", "payment", "checkout", "apple pay", "google pay"],
+  "fashion": ["fashion", "clothing", "apparel", "style", "outfit", "wardrobe", "sustainable fashion"],
+  "beauty": ["beauty", "skincare", "makeup", "cosmetics", "hair care", "self care", "beauty products"],
+  "drinks": ["wine", "beer", "beverages", "drinks", "alcohol", "craft beer", "cocktails"],
+  "dtc": ["direct to consumer", "dtc", "dtc brands", "digital native", "online only", "ecommerce brand"],
+  "sustainability": ["sustainable", "eco friendly", "carbon neutral", "recycled", "ethical", "green", "environmental"],
+  "personalization": ["personalized", "custom", "bespoke", "made to order", "ai recommendations", "tailored"],
+  "returns": ["returns", "refunds", "exchange", "return policy", "free returns"],
+  "influencer": ["influencer", "creator", "affiliate", "influencer marketing", "creator economy", "ugc"],
+  "reviews": ["reviews", "ratings", "customer reviews", "testimonials", "social proof"],
+  "mobile": ["mobile commerce", "mobile shopping", "app", "mobile first", "mobile optimization"]
 }
-

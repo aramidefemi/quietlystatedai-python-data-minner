@@ -2,26 +2,9 @@
 import json
 from datetime import datetime
 from typing import Dict, Any
-from bson import ObjectId
 import feedparser
-from pymongo.collection import Collection
 from db.mongo_client import get_db
-from db.models import Source, RawAlert
-
-
-def _get_or_create_source(origin: str, url: str, sources_col: Collection) -> ObjectId:
-    """Get existing source or create new one."""
-    source = sources_col.find_one({"origin": origin, "url": url})
-    if source:
-        return source["_id"]
-    
-    new_source = Source(
-        type="alert",
-        origin=origin,
-        url=url
-    )
-    result = sources_col.insert_one(new_source.model_dump(by_alias=True))
-    return result.inserted_id
+from db.models import RawAlert
 
 
 def _parse_published_date(entry: Dict[str, Any]) -> datetime:
@@ -42,7 +25,6 @@ def fetch_and_store_alerts(config_path: str = "config/feeds.json") -> None:
         feeds = json.load(f)
     
     db = get_db()
-    sources_col = db.sources
     alerts_col = db.raw_alerts
     
     for feed_config in feeds:
@@ -58,14 +40,13 @@ def fetch_and_store_alerts(config_path: str = "config/feeds.json") -> None:
         try:
             feed = feedparser.parse(feed_url)
             
-            source_id = _get_or_create_source(source_name, feed_url, sources_col)
-            
             for entry in feed.entries:
                 try:
                     published_at = _parse_published_date(entry)
                     
                     alert_doc = RawAlert(
-                        source_id=source_id,
+                        source_origin=source_name,
+                        source_url=feed_url,
                         keyword=keyword,
                         title=entry.get("title", ""),
                         snippet=entry.get("summary", ""),

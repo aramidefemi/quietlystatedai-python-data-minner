@@ -6,43 +6,36 @@ from bson import ObjectId
 
 
 class PyObjectId(ObjectId):
-    """Custom ObjectId for Pydantic."""
+    """Custom ObjectId for Pydantic v2."""
     @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
+    def __get_pydantic_core_schema__(cls, source_type, handler):
+        from pydantic_core import core_schema
+        return core_schema.json_or_python_schema(
+            json_schema=core_schema.str_schema(),
+            python_schema=core_schema.union_schema([
+                core_schema.is_instance_schema(ObjectId),
+                core_schema.chain_schema([
+                    core_schema.str_schema(),
+                    core_schema.no_info_plain_validator_function(cls.validate),
+                ])
+            ]),
+            serialization=core_schema.plain_serializer_function_ser_schema(
+                lambda x: str(x) if isinstance(x, ObjectId) else x
+            ),
+        )
 
     @classmethod
     def validate(cls, v):
-        if not ObjectId.is_valid(v):
-            raise ValueError("Invalid ObjectId")
-        return ObjectId(v)
-
-    @classmethod
-    def __modify_schema__(cls, field_schema):
-        field_schema.update(type="string")
-
-
-# Source models
-class Source(BaseModel):
-    """Source document model."""
-    id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
-    type: str  # "trend" | "alert" | "article"
-    origin: str
-    url: str
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-
-    class Config:
-        populate_by_name = True
-        arbitrary_types_allowed = True
+        if isinstance(v, ObjectId):
+            return v
+        if isinstance(v, str):
+            if ObjectId.is_valid(v):
+                return ObjectId(v)
+            raise ValueError("Invalid ObjectId string")
+        raise ValueError("Invalid ObjectId")
 
 
 # Raw data models
-class InterestPoint(BaseModel):
-    """Single interest data point."""
-    date: datetime
-    value: int
-
-
 class RelatedQuery(BaseModel):
     """Related query entry."""
     query: str
@@ -59,15 +52,16 @@ class RelatedQueries(BaseModel):
 class RawTrend(BaseModel):
     """Raw trends document model."""
     id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
-    source_id: PyObjectId
+    source_type: str = "trend"
+    source_origin: str
+    source_url: str
     group: str
     term: str
     geo: str
     timeframe: str
     pulled_at: datetime = Field(default_factory=datetime.utcnow)
-    interest_over_time: List[InterestPoint] = Field(default_factory=list)
+    weekly_interest: float = 0.0
     related_queries: RelatedQueries = Field(default_factory=RelatedQueries)
-    raw_payload: Optional[Dict[str, Any]] = None
 
     class Config:
         populate_by_name = True
@@ -77,7 +71,9 @@ class RawTrend(BaseModel):
 class RawAlert(BaseModel):
     """Raw alerts document model."""
     id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
-    source_id: PyObjectId
+    source_type: str = "alert"
+    source_origin: str
+    source_url: str
     keyword: str
     title: str
     snippet: str
@@ -93,15 +89,17 @@ class RawAlert(BaseModel):
 class RawArticle(BaseModel):
     """Raw articles document model."""
     id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
-    source_id: PyObjectId
+    source_type: str = "article"
+    source_origin: str
+    source_url: str
     title: str
     url: str
-    source: str
     published_at: datetime
     fetched_at: datetime = Field(default_factory=datetime.utcnow)
     author: Optional[str] = None
     text: str
     tags_raw: List[str] = Field(default_factory=list)
+    data_points: List[str] = Field(default_factory=list)  # Quantifiable statements
 
     class Config:
         populate_by_name = True
@@ -112,8 +110,9 @@ class RawArticle(BaseModel):
 class ProcessedSignal(BaseModel):
     """Processed signal document model."""
     id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
-    source_id: PyObjectId
-    origin_type: str  # "article" | "alert"
+    source_type: str  # "article" | "alert" | "trend"
+    source_origin: str
+    source_url: str
     topic: str
     entity: str
     metric: str

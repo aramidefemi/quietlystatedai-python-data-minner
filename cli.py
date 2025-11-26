@@ -1,5 +1,6 @@
 """Command-line interface for QuietlyStated."""
 import click
+import json
 from datetime import datetime, timedelta
 from sources.google_trends import fetch_and_store_trends
 from sources.google_alerts import fetch_and_store_alerts
@@ -8,11 +9,18 @@ from jobs.extract_signals import enrich_signals
 from jobs.aggregate_insights import aggregate_insights
 from analytics.trends_reports import get_top_terms, get_top_topics, get_notable_stats
 from db.mongo_client import close_connection
+from config.config_manager import ConfigManager
 
 
 @click.group()
 def cli():
     """QuietlyStated CLI - Trend Intelligence System"""
+    pass
+
+
+@cli.group()
+def config():
+    """Manage configuration in MongoDB"""
     pass
 
 
@@ -56,6 +64,93 @@ def aggregate_insights_cmd(days):
     click.echo(f"Generating insights for last {days} days...")
     aggregate_insights(days)
     click.echo("Done!")
+
+
+@config.command("seed")
+def config_seed():
+    """Load JSON configs into MongoDB"""
+    click.echo("🌱 Seeding MongoDB with JSON configs...")
+    manager = ConfigManager()
+    results = manager.seed_from_json()
+    
+    for config_name, success in results.items():
+        if success:
+            click.echo(f"  ✓ {config_name} loaded")
+        else:
+            click.echo(f"  ✗ {config_name} failed")
+    
+    click.echo("\n📊 Configuration Stats:")
+    stats = manager.get_stats()
+    click.echo(f"  Keywords: {stats['keywords']['total_terms']} terms in {stats['keywords']['groups']} groups across {stats['keywords']['regions']} regions")
+    click.echo(f"  Feeds: {stats['feeds']['enabled']}/{stats['feeds']['total']} enabled")
+    click.echo(f"  Topics: {stats['topics']['total']} topics")
+    click.echo("\n✅ Done! Configs are now in MongoDB")
+
+
+@config.command("show")
+@click.argument("config_type", type=click.Choice(["keywords", "feeds", "topics", "all"]))
+def config_show(config_type):
+    """Show configuration from MongoDB"""
+    manager = ConfigManager()
+    
+    if config_type in ["keywords", "all"]:
+        click.echo("\n📊 KEYWORDS CONFIG")
+        click.echo("="*60)
+        kw_config = manager.get_keywords_config()
+        click.echo(f"Regions: {', '.join(kw_config.get('regions', []))}")
+        click.echo(f"Timeframe: {kw_config.get('timeframe', 'N/A')}")
+        click.echo(f"\nGroups ({len(kw_config.get('groups', []))}):")
+        for group in kw_config.get('groups', []):
+            terms_count = len(group.get('terms', []))
+            click.echo(f"  • {group['name']}: {terms_count} terms")
+    
+    if config_type in ["feeds", "all"]:
+        click.echo("\n📰 FEEDS CONFIG")
+        click.echo("="*60)
+        feeds = manager.get_feeds_config()
+        for feed in feeds:
+            status = "✓" if feed.get("enabled", True) else "✗"
+            keyword = f" ({feed['keyword']})" if feed.get('keyword') else ""
+            click.echo(f"  {status} {feed['source']}{keyword}")
+            click.echo(f"    {feed['url'][:70]}...")
+    
+    if config_type in ["topics", "all"]:
+        click.echo("\n🏷️  TOPICS CONFIG")
+        click.echo("="*60)
+        topics = manager.get_topics_config()
+        for topic, keywords in topics.items():
+            click.echo(f"  • {topic}: {len(keywords)} keywords")
+    
+    click.echo()
+
+
+@config.command("add-feed")
+@click.argument("source")
+@click.argument("url")
+@click.option("--keyword", default=None, help="Keyword for Google Alerts")
+def config_add_feed(source, url, keyword):
+    """Add a new RSS feed"""
+    manager = ConfigManager()
+    success = manager.add_feed(source, url, keyword=keyword)
+    
+    if success:
+        click.echo(f"✅ Added feed: {source}")
+    else:
+        click.echo(f"❌ Failed to add feed. Run 'config seed' first.")
+
+
+@config.command("add-term")
+@click.argument("group")
+@click.argument("term")
+def config_add_term(group, term):
+    """Add a term to a keyword group"""
+    manager = ConfigManager()
+    success = manager.add_keyword_term(group, term)
+    
+    if success:
+        click.echo(f"✅ Added '{term}' to '{group}' group")
+    else:
+        click.echo(f"❌ Failed to add term. Check if group exists.")
 
 
 @cli.command()

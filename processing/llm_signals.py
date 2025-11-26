@@ -39,7 +39,13 @@ def _extract_entity_and_metric(sentence: str) -> Tuple[str, str]:
     return entity, metric
 
 
-def extract_structured_signals(text: str, source_id: Any, origin_type: str, topic: str) -> List[ProcessedSignal]:
+def extract_structured_signals(
+    text: str, 
+    source_type: str,
+    source_origin: str, 
+    source_url: str, 
+    topic: str
+) -> List[ProcessedSignal]:
     """
     Extract structured signals from text.
     
@@ -47,8 +53,9 @@ def extract_structured_signals(text: str, source_id: Any, origin_type: str, topi
     
     Args:
         text: Input text
-        source_id: Source document ID
-        origin_type: "article" or "alert"
+        source_type: "article" | "alert" | "trend"
+        source_origin: Source identifier
+        source_url: Source URL
         topic: Topic classification
         
     Returns:
@@ -65,8 +72,9 @@ def extract_structured_signals(text: str, source_id: Any, origin_type: str, topi
         entity, metric = _extract_entity_and_metric(candidate.sentence)
         
         signal = ProcessedSignal(
-            source_id=source_id,
-            origin_type=origin_type,
+            source_type=source_type,
+            source_origin=source_origin,
+            source_url=source_url,
             topic=topic,
             entity=entity,
             metric=metric,
@@ -86,8 +94,9 @@ def process_article(article: RawArticle, topic: str) -> List[ProcessedSignal]:
     """Process a raw article into signals."""
     return extract_structured_signals(
         article.text,
-        article.id,
-        "article",
+        article.source_type,
+        article.source_origin,
+        article.source_url,
         topic
     )
 
@@ -97,8 +106,9 @@ def process_alert(alert: RawAlert, topic: str) -> List[ProcessedSignal]:
     text = f"{alert.title} {alert.snippet}"
     return extract_structured_signals(
         text,
-        alert.id,
-        "alert",
+        alert.source_type,
+        alert.source_origin,
+        alert.source_url,
         topic
     )
 

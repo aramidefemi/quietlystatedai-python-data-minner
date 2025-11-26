@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "quietlystated": {
+      "command": "python",
+      "args": [
+        "/FULL/PATH/TO/quietlystated/mcp_server.py"
+      ],
+      "env": {
+        "MONGODB_URI": "mongodb://localhost:27017/",
+        "MONGODB_DB_NAME": "quietlystated"
+      }
+    }
+  }
+}

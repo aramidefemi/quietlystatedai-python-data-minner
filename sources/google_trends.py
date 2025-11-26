@@ -3,11 +3,9 @@ import json
 import time
 from datetime import datetime
 from typing import List, Dict, Any
-from bson import ObjectId
 from pytrends.request import TrendReq
-from pymongo.collection import Collection
 from db.mongo_client import get_db
-from db.models import Source, RawTrend, InterestPoint, RelatedQuery, RelatedQueries
+from db.models import RawTrend, RelatedQuery, RelatedQueries
 
 
 def _chunk_terms(terms: List[str], chunk_size: int = 5) -> List[List[str]]:
@@ -15,35 +13,17 @@ def _chunk_terms(terms: List[str], chunk_size: int = 5) -> List[List[str]]:
     return [terms[i:i + chunk_size] for i in range(0, len(terms), chunk_size)]
 
 
-def _get_or_create_source(origin: str, url: str, sources_col: Collection) -> ObjectId:
-    """Get existing source or create new one."""
-    source = sources_col.find_one({"origin": origin, "url": url})
-    if source:
-        return source["_id"]
-    
-    new_source = Source(
-        type="trend",
-        origin=origin,
-        url=url
-    )
-    result = sources_col.insert_one(new_source.model_dump(by_alias=True))
-    return result.inserted_id
-
-
 def _fetch_trend_data(pytrends: TrendReq, term: str, geo: str, timeframe: str) -> Dict[str, Any]:
-    """Fetch interest over time and related queries for a term."""
+    """Fetch weekly total interest and related queries for a term."""
     pytrends.build_payload([term], geo=geo, timeframe=timeframe)
     
     interest_df = pytrends.interest_over_time()
     related_queries_dict = pytrends.related_queries()
     
-    interest_points = []
-    if not interest_df.empty:
-        for date, row in interest_df.iterrows():
-            interest_points.append(InterestPoint(
-                date=date.to_pydatetime(),
-                value=int(row[term])
-            ))
+    # Calculate weekly average interest (simplified storage)
+    weekly_interest = 0.0
+    if not interest_df.empty and term in interest_df.columns:
+        weekly_interest = float(interest_df[term].mean())
     
     related_queries = RelatedQueries()
     if related_queries_dict and term in related_queries_dict:
@@ -64,7 +44,7 @@ def _fetch_trend_data(pytrends: TrendReq, term: str, geo: str, timeframe: str) -
             ]
     
     return {
-        "interest_over_time": interest_points,
+        "weekly_interest": weekly_interest,
         "related_queries": related_queries
     }
 
@@ -80,7 +60,6 @@ def fetch_and_store_trends(config_path: str = "config/keywords.json") -> None:
         config = json.load(f)
     
     db = get_db()
-    sources_col = db.sources
     trends_col = db.raw_trends
     
     pytrends = TrendReq(hl="en-GB", tz=360)
@@ -100,24 +79,22 @@ def fetch_and_store_trends(config_path: str = "config/keywords.json") -> None:
                         origin = f"google_trends_{geo}_{group_name}"
                         url = f"https://trends.google.com/trends/explore?geo={geo}&q={term}"
                         
-                        source_id = _get_or_create_source(origin, url, sources_col)
-                        
                         trend_data = _fetch_trend_data(pytrends, term, geo, timeframe)
                         
                         trend_doc = RawTrend(
-                            source_id=source_id,
+                            source_origin=origin,
+                            source_url=url,
                             group=group_name,
                             term=term,
                             geo=geo,
                             timeframe=timeframe,
-                            interest_over_time=trend_data["interest_over_time"],
+                            weekly_interest=trend_data["weekly_interest"],
                             related_queries=trend_data["related_queries"]
                         )
                         
-                        # Upsert by source_id + term + geo + timeframe
+                        # Upsert by term + geo + timeframe
                         trends_col.update_one(
                             {
-                                "source_id": source_id,
                                 "term": term,
                                 "geo": geo,
                                 "timeframe": timeframe

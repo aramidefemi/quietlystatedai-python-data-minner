@@ -1,19 +1,54 @@
 {
-  "regions": ["GB"],
+  "regions": ["NG",  "GB", "FR", "US"],
   "timeframe": "now 7-d",
   "groups": [
     {
+      "name": "fashion_trends",
+      "terms": ["cargo pants", "linen trousers", "sneakers", "loafers", "minimalist fashion"]
+    },
+    {
       "name": "beauty_products",
-      "terms": ["press on nails", "acrylic nails", "lip gloss", "lip oil"]
+      "terms": ["press on nails", "lip gloss", "skincare routine", "hair care", "makeup"]
     },
     {
-      "name": "fashion",
-      "terms": ["cargo pants", "linen trousers", "sneakers", "loafers"]
+      "name": "drinks_beverages",
+      "terms": ["wine", "craft beer", "cold brew", "energy drinks", "kombucha"]
     },
     {
-      "name": "ecom_meta",
-      "terms": ["same day delivery", "click and collect", "free shipping"]
+      "name": "ecom_delivery",
+      "terms": ["same day delivery", "click and collect", "free shipping", "express delivery", "next day delivery"]
+    },
+    {
+      "name": "dtc_brands",
+      "terms": ["direct to consumer", "dtc brands", "subscription box", "online only", "digital native"]
+    },
+    {
+      "name": "payment_methods",
+      "terms": ["buy now pay later", "klarna", "afterpay", "apple pay", "google pay"]
+    },
+    {
+      "name": "social_commerce",
+      "terms": ["tiktok shop", "instagram shopping", "social commerce", "live shopping", "shoppable posts"]
+    },
+    {
+      "name": "email_marketing",
+      "terms": ["email marketing", "newsletter", "abandoned cart", "email automation", "klaviyo"]
+    },
+    {
+      "name": "retention_loyalty",
+      "terms": ["loyalty program", "customer retention", "repeat purchase", "subscription", "membership"]
+    },
+    {
+      "name": "sustainability",
+      "terms": ["sustainable fashion", "eco friendly", "carbon neutral", "recycled materials", "ethical brands"]
+    },
+    {
+      "name": "personalization",
+      "terms": ["personalized recommendations", "custom products", "made to order", "bespoke", "ai recommendations"]
+    },
+    {
+      "name": "returns_refunds",
+      "terms": ["free returns", "easy returns", "return policy", "refund", "exchange"]
     }
   ]
 }
-

@@ -34,7 +34,10 @@ def get_article(article_id: str) -> dict:
     result = article.model_dump(by_alias=True, mode="json")
     
     # Get associated signals
-    signals = list(signals_col.find({"source_id": article.id}))
+    signals = list(signals_col.find({
+        "source_origin": article.source_origin,
+        "source_url": article.source_url
+    }))
     result["signals"] = [ProcessedSignal(**s).model_dump(by_alias=True, mode="json") for s in signals]
     
     # Get associated insights (that reference these signals)
@@ -56,7 +59,7 @@ def list_articles(
     
     query = {}
     if source:
-        query["source"] = source
+        query["source_origin"] = source
     
     cursor = articles_col.find(query).sort("published_at", -1).limit(limit)
     

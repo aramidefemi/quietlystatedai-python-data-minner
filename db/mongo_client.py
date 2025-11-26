@@ -16,7 +16,12 @@ def get_client() -> MongoClient:
     global _client
     if _client is None:
         uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017/")
-        _client = MongoClient(uri)
+        # For MongoDB Atlas (remote), disable SSL verification if needed
+        # In production, you should use proper SSL certificates
+        if "mongodb+srv://" in uri:
+            _client = MongoClient(uri, tlsAllowInvalidCertificates=True)
+        else:
+            _client = MongoClient(uri)
     return _client
 
 

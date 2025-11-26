@@ -10,10 +10,58 @@
     "type": "rss"
   },
   {
+    "source": "recharge_blog",
+    "url": "https://rechargepayments.com/blog/rss",
+    "type": "rss"
+  },
+  {
+    "source": "gorgias_blog",
+    "url": "https://www.gorgias.com/blog/rss",
+    "type": "rss"
+  },
+  {
+    "source": "modern_retail",
+    "url": "https://www.modernretail.co/feed/",
+    "type": "rss"
+  },
+  {
+    "source": "retail_dive",
+    "url": "https://www.retaildive.com/feed/",
+    "type": "rss"
+  },
+  {
+    "source": "ecommerce_bytes",
+    "url": "https://www.ecommercebytes.com/feed/",
+    "type": "rss"
+  },
+  {
+    "source": "google_alerts_ecommerce_trends",
+    "url": "https://www.google.com/alerts/feeds/04204439296683694726/6622454730863417338",
+    "type": "rss",
+    "keyword": "ecommerce trends"
+  },
+  {
+    "source": "google_alerts_ecommerce_strategy",
+    "url": "https://www.google.com/alerts/feeds/04204439296683694726/15128705019783488181",
+    "type": "rss",
+    "keyword": "ecommerce strategy"
+  },
+  {
+    "source": "google_alerts_ecommerce",
+    "url": "https://www.google.com/alerts/feeds/04204439296683694726/18333406528584467292",
+    "type": "rss",
+    "keyword": "ecommerce"
+  },
+  {
+    "source": "google_alerts_dtc_brands",
+    "url": "https://www.google.com/alerts/feeds/04204439296683694726/9859097502073087253",
+    "type": "rss",
+    "keyword": "dtc brands"
+  },
+  {
     "source": "google_alerts_tiktok_shop",
-    "url": "https://www.google.com/alerts/feeds/00000000000000000000/00000000000000000000",
+    "url": "https://www.google.com/alerts/feeds/04204439296683694726/9859097502073088231",
     "type": "rss",
     "keyword": "tiktok shop ecommerce"
   }
 ]
-

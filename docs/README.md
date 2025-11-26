@@ -45,6 +45,20 @@ Welcome! This documentation will help you understand and use QuietlyStated.
    - Deployment
    - Security
 
+7. **[07-mcp-integration.md](07-mcp-integration.md)** - Connect to Claude Desktop
+   - What is MCP?
+   - Setup instructions
+   - Available tools
+   - Example queries
+   - Troubleshooting
+
+8. **[08-social-media-generator.md](08-social-media-generator.md)** - Turn Insights into Social Posts
+   - How it works
+   - Post structure & templates
+   - Usage workflow
+   - Implementation roadmap
+   - Best practices
+
 ## 🚀 Quick Start
 
 1. Read `00-overview.md` to understand what this is
@@ -85,6 +99,8 @@ A: That's okay! The documentation is written for non-technical users. Follow the
 | 03-how-it-works | Technical details, architecture | Curious users |
 | 04-usage | Daily commands, workflows, automation | Regular users |
 | 05-advanced | Customization, deployment, extensions | Power users |
+| 07-mcp-integration | Connect QuietlyStated to Claude Desktop | Claude users |
+| 08-social-media-generator | Turn insights into social posts | Content creators |
 
 ## 📝 Document Conventions
 

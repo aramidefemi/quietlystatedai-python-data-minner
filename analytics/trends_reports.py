@@ -8,10 +8,7 @@ from db.models import RawTrend, ProcessedSignal
 
 def _calculate_avg_interest(trend: RawTrend) -> float:
     """Calculate average interest value for a trend."""
-    if not trend.interest_over_time:
-        return 0.0
-    values = [point.value for point in trend.interest_over_time]
-    return sum(values) / len(values) if values else 0.0
+    return trend.weekly_interest
 
 
 def get_top_terms(

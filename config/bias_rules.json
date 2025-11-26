@@ -1,0 +1,45 @@
+{
+  "rules": [
+    {
+      "source": "recharge_blog",
+      "reason": "Recharge sells subscription software",
+      "exclude_topics": ["retention", "subscription"],
+      "exclude_keywords": [
+        "subscription",
+        "subscriber",
+        "ltv",
+        "lifetime value",
+        "churn",
+        "repeat purchase",
+        "retention rate"
+      ]
+    },
+    {
+      "source": "klaviyo_blog",
+      "reason": "Klaviyo sells email marketing software",
+      "exclude_topics": ["email_sms", "email_marketing"],
+      "exclude_keywords": [
+        "email",
+        "sms",
+        "klaviyo",
+        "open rate",
+        "click rate",
+        "email revenue",
+        "abandoned cart"
+      ]
+    },
+    {
+      "source": "gorgias_blog",
+      "reason": "Gorgias sells customer service software",
+      "exclude_topics": ["customer_service", "support"],
+      "exclude_keywords": [
+        "customer service",
+        "support ticket",
+        "response time",
+        "customer satisfaction",
+        "csat"
+      ]
+    }
+  ]
+}
+

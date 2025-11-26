@@ -135,6 +135,17 @@ You can schedule everything to run automatically:
 
 See `docs/04-usage.md` for how to set this up (it's easier than it sounds!).
 
+## Connect to Claude (MCP)
+
+Want to ask Claude questions about your trends? We've got an MCP server!
+
+**MCP (Model Context Protocol)** lets Claude access your QuietlyStated data. Ask Claude things like:
+- "What are the top trends this week?"
+- "Show me insights about TikTok Shop"
+- "What statistics changed significantly?"
+
+See `docs/07-mcp-integration.md` for setup instructions. It's easy - just add a few lines to your Claude Desktop config!
+
 ## Need Help?
 
 **📚 Full documentation is in the `docs/` folder!**
@@ -144,6 +155,7 @@ Start here:
 - **`docs/00-overview.md`** - What is QuietlyStated? (more details)
 - **`docs/01-setup.md`** - Step-by-step installation
 - **`docs/02-configuration.md`** - How to configure (where to put keywords, feeds, etc.)
+- **`docs/07-mcp-integration.md`** - Connect to Claude Desktop
 - **`docs/QUICK-REFERENCE.md`** - Quick command cheat sheet
 - **`docs/06-troubleshooting.md`** - Common problems and solutions
 
