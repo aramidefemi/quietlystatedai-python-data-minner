@@ -20,4 +20,5 @@ dmypy.json
 .DS_Store
 *.log
 notebooks/.ipynb_checkpoints/
+run.sh
 
